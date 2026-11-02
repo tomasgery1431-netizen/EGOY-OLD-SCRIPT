@@ -21013,49 +21013,24 @@ Library.Util = Util
 
 local function CreateAutoThrow()
     local CONFIG = {
-        WalkTargets     = {
+        TeleportTargets  = {
             Vector3.new(-5, 6, -45),
         },
-        WalkSpeed       = 1000,
-        WalkTimeout     = 30,
-        WalkArriveDist  = 5,
-        AutoTapValue    = 0.6,
-        ExtraThrowProps = {},
+        TeleportSettle   = 0.2,
+        AutoTapValue     = 0.6,
+        ExtraThrowProps  = {},
         AutoThrowEnabled = true,
-        ThrowInterval   = 1.2,
-        EquipDelay      = 0.3,
+        ThrowInterval    = 1.2,
+        EquipDelay       = 0.3,
     }
 
     local player = LocalPlayer
-    local state = { enabled = false, depth = 0, walking = false, throwing = false }
+    local state = { enabled = false, depth = 0, running = false }
     local runId = 0
-    local savedSpeeds = {}
     local meter, originalRun, charConn
 
     local function notify(text, kind)
         Library:Notify("Auto Throw", text, 2, kind or "Info")
-    end
-
-    local function currentHumanoid()
-        local char = player.Character
-        return char and char:FindFirstChildOfClass("Humanoid")
-    end
-
-    local function applyWalkSpeed()
-        local hum = currentHumanoid()
-        if not hum then return end
-        if savedSpeeds[hum] == nil then savedSpeeds[hum] = hum.WalkSpeed end
-        hum.WalkSpeed = CONFIG.WalkSpeed
-    end
-
-    local function restoreWalkSpeed()
-        local hum = currentHumanoid()
-        if not hum then return end
-        local orig = savedSpeeds[hum]
-        if orig ~= nil then
-            hum.WalkSpeed = orig
-            savedSpeeds[hum] = nil
-        end
     end
 
     local function findMeter()
@@ -21123,37 +21098,14 @@ local function CreateAutoThrow()
         meter, originalRun = nil, nil
     end
 
-    local function walkTo(target, timeout)
-        local char = player.Character or player.CharacterAdded:Wait()
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if not hum or not root then return false end
-
-        applyWalkSpeed()
-        local arriveDist = math.max(CONFIG.WalkArriveDist, CONFIG.WalkSpeed * 0.05)
-
-        state.walking = true
-        hum:MoveTo(target)
-
-        local start = os.clock()
-        local done, arrived = false, false
-        local conn = RunService.Heartbeat:Connect(function()
-            if done then return end
-            if not state.enabled then done = true return end
-            if not char.Parent or not hum.Parent or not root.Parent then done = true return end
-            if (root.Position - target).Magnitude <= arriveDist then
-                done, arrived = true, true
-                return
-            end
-            if os.clock() - start >= timeout then done = true end
-        end)
-
-        while not done do task.wait(0.02) end
-        conn:Disconnect()
-
-        if hum.Parent and root.Parent then hum:MoveTo(root.Position) end
-        state.walking = false
-        return arrived
+    local function teleportTo(target)
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        if not root then return false end
+        local current = root.CFrame
+        root.CFrame = CFrame.new(target) * (current - current.Position)
+        root.AssemblyLinearVelocity = Vector3.zero
+        return true
     end
 
     local function findTool()
@@ -21188,23 +21140,21 @@ local function CreateAutoThrow()
     end
 
     local function runSequence()
-        if state.walking or state.throwing then return end
+        if state.running then return end
         runId += 1
         local myRun = runId
+        state.running = true
 
         notify("Auto-cycle started")
-        state.throwing = true
 
         while state.enabled and runId == myRun do
-            for _, target in ipairs(CONFIG.WalkTargets) do
+            for _, target in ipairs(CONFIG.TeleportTargets) do
                 if not state.enabled or runId ~= myRun then break end
 
-                local arrived = walkTo(target, CONFIG.WalkTimeout)
-                if not state.enabled or runId ~= myRun then break end
-
-                if not arrived then
-                    notify("Walk timed out, throwing anyway", "Warning")
+                if teleportTo(target) then
+                    task.wait(CONFIG.TeleportSettle)
                 end
+                if not state.enabled or runId ~= myRun then break end
 
                 if CONFIG.AutoThrowEnabled then
                     if player.Character then throwOnce() end
@@ -21212,12 +21162,12 @@ local function CreateAutoThrow()
                 end
             end
 
-            if #CONFIG.WalkTargets == 0 or not CONFIG.AutoThrowEnabled then
+            if #CONFIG.TeleportTargets == 0 or not CONFIG.AutoThrowEnabled then
                 task.wait(0.5)
             end
         end
 
-        if runId == myRun then state.throwing = false end
+        if runId == myRun then state.running = false end
     end
 
     local controller = {}
@@ -21229,13 +21179,9 @@ local function CreateAutoThrow()
             return false
         end
         state.enabled = true
-        applyWalkSpeed()
         charConn = player.CharacterAdded:Connect(function()
             task.wait(0.5)
-            if state.enabled then
-                applyWalkSpeed()
-                task.defer(runSequence)
-            end
+            if state.enabled then task.defer(runSequence) end
         end)
         task.defer(runSequence)
         return true
@@ -21244,15 +21190,9 @@ local function CreateAutoThrow()
     function controller.Stop()
         if not state.enabled and not meter then return end
         state.enabled = false
-        state.throwing = false
-        state.walking = false
+        state.running = false
         runId += 1
         if charConn then charConn:Disconnect() charConn = nil end
-        local hum = currentHumanoid()
-        local char = player.Character
-        local root = char and char:FindFirstChild("HumanoidRootPart")
-        if hum and root and root.Parent then hum:MoveTo(root.Position) end
-        restoreWalkSpeed()
         removeHook()
     end
 
