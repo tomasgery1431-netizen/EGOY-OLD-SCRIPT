@@ -114,7 +114,7 @@ local Config = {
     TitleColors = { "Accent", "Coin", "Good", "Info" },
 }
 
-local Themes = { Order = { "Overworld", "Light", "Dark", "Underground", "Castle", "Star Road" } }
+local Themes = { Order = { "Overworld", "Light", "Dark", "Underground", "Castle", "Star Road", "Underwater", "Desert", "Ghost House" } }
 
 do
     local function FromHex(hex)
@@ -149,16 +149,16 @@ do
     Themes.Shared = Palette({ White = "FFFFFF", Black = "000000", Ink = "2E2838", HeroInk = "2E2838", Knob = "FFFFFF" })
 
     Themes.Overworld = Palette({
-        Backdrop = "C9DAEE", BackdropAlt = "E4EBF4", Topbar = "7896CC", TopbarText = "FFFFFF",
-        Sidebar = "9A5D44", SidebarAlt = "844E39", SidebarText = "FCF2E6", SidebarMuted = "E3C7B3",
-        TabActive = "FBF5EA", TabActiveText = "B8463A",
-        Panel = "FAF6EE", PanelHeader = "F1E8D6", Element = "FFFCF7", Hover = "F0E4CE", Pressed = "DCCDB2",
-        Outline = "40394B", Shadow = "7E86A4", Text = "3A3028", SubText = "76685A", Muted = "A29684", Track = "DFD5C5",
-        Accent = "D45446", AccentDark = "A23A30", AccentText = "FFFFFF",
-        Good = "62A964", Warn = "E2A447", Bad = "D45446", Info = "5A8FC6",
-        Coin = "EEC452", Cloud = "FFFFFF", CloudAlpha = 0.25, Grass = "78B460", GrassDark = "548A44",
-        Brick = "A66446", BrickDark = "6A3D2A", Glow = "FFF0C2",
-        Decor = { "Clouds" }, Particle = { "✦", false, "F3D88A" },
+        Backdrop = "6FA4FF", BackdropAlt = "BCDCFF", Topbar = "5C94FC", TopbarText = "FFFFFF",
+        Sidebar = "C84C0C", SidebarAlt = "9C3A08", SidebarText = "FFF4E0", SidebarMuted = "F8B878",
+        TabActive = "FFEBA8", TabActiveText = "C0281C",
+        Panel = "FFF8E6", PanelHeader = "FCE9B8", Element = "FFFDF4", Hover = "FDEFC9", Pressed = "E8D3A0",
+        Outline = "2B1B14", Shadow = "3E5FB0", Text = "3A2418", SubText = "7A5A3E", Muted = "B09A78", Track = "E8D8B0",
+        Accent = "E52521", AccentDark = "A81814", AccentText = "FFFFFF",
+        Good = "43B047", Warn = "FCA044", Bad = "E52521", Info = "049CD8",
+        Coin = "FCD000", Cloud = "FFFFFF", CloudAlpha = 0, Grass = "58B83C", GrassDark = "2C8A24",
+        Brick = "C84C0C", BrickDark = "7C2C00", Glow = "FFE9A0",
+        Decor = { "Clouds" }, Particle = { "✦", false, "FFE27A" },
     })
 
     Themes.Light = Palette({
@@ -224,6 +224,44 @@ do
         Coin = "F0C858", Cloud = "FBE38C", CloudAlpha = 0.8, Grass = "EEC452", GrassDark = "B88E2E",
         Brick = "5B3AA6", BrickDark = "2B1A58", Glow = "FFE59A",
         Decor = { "Stars", "★", "F8D86A" }, Particle = { "★", false, "F8D86A" },
+    })
+    Themes.Underwater = Palette({
+        Backdrop = "2A86C8", BackdropAlt = "7BCDEB", Topbar = "1A6BAE", TopbarText = "FFFFFF",
+        Sidebar = "2E9C8E", SidebarAlt = "227A70", SidebarText = "F2FFFB", SidebarMuted = "A8E6DA",
+        TabActive = "FFF4B8", TabActiveText = "1A6BAE",
+        Panel = "F2FCFF", PanelHeader = "D5F0F8", Element = "FFFFFF", Hover = "E0F5FA", Pressed = "BFE4EE",
+        Outline = "0F2A44", Shadow = "14507F", Text = "153247", SubText = "46708A", Muted = "8DB3C6", Track = "CBE7F0",
+        Accent = "FF6A4D", AccentDark = "C84630", AccentText = "FFFFFF",
+        Good = "43B047", Warn = "FCA044", Bad = "E52521", Info = "049CD8",
+        Coin = "FCD000", Cloud = "CFF4FF", CloudAlpha = 0.55, Grass = "E9D9A0", GrassDark = "BDA868",
+        Brick = "D8BE86", BrickDark = "9C8650", Glow = "CFF4FF",
+        Decor = { "Stars", "•", "DFF8FF" }, Particle = { "•", false, "DFF8FF" },
+    })
+
+    Themes.Desert = Palette({
+        Backdrop = "F6C770", BackdropAlt = "FFE6A8", Topbar = "F09A3E", TopbarText = "FFFFFF",
+        Sidebar = "B8742E", SidebarAlt = "925820", SidebarText = "FFF6E2", SidebarMuted = "F2CC94",
+        TabActive = "FFF0B8", TabActiveText = "B8321C",
+        Panel = "FFF9EA", PanelHeader = "FBE8BC", Element = "FFFEF6", Hover = "FDEFCB", Pressed = "EAD3A2",
+        Outline = "3A2414", Shadow = "B8742E", Text = "3A2616", SubText = "7E5C3A", Muted = "B8A07C", Track = "ECDAB2",
+        Accent = "E5402A", AccentDark = "A82A18", AccentText = "FFFFFF",
+        Good = "58A83C", Warn = "FCA044", Bad = "E5402A", Info = "049CD8",
+        Coin = "FCD000", Cloud = "FFF2D0", CloudAlpha = 0.2, Grass = "E4B05A", GrassDark = "B88438",
+        Brick = "D69A4A", BrickDark = "8C5A22", Glow = "FFE9A0",
+        Decor = { "Clouds" }, Particle = { "✦", false, "FFE2A0" },
+    })
+
+    Themes["Ghost House"] = Palette({
+        Backdrop = "2A2440", BackdropAlt = "3A3158", Topbar = "1E1A32", TopbarText = "F4EEFF",
+        Sidebar = "4A4272", SidebarAlt = "393258", SidebarText = "F4EEFF", SidebarMuted = "B4AAD8",
+        TabActive = "F2F0FF", TabActiveText = "4A3A90",
+        Panel = "322C4E", PanelHeader = "3C3560", Element = "453D6A", Hover = "52497C", Pressed = "362F56",
+        Outline = "0C0916", Shadow = "0C0916", Text = "F4EEFF", SubText = "C0B6E0", Muted = "8E84B4", Track = "554C80",
+        Accent = "9A6CF0", AccentDark = "6C46B4", AccentText = "FFFFFF",
+        Good = "62C08E", Warn = "E8B354", Bad = "E0645E", Info = "7FA3F2",
+        Coin = "F0C858", Cloud = "E8E2FF", CloudAlpha = 0.85, Grass = "5A4C8C", GrassDark = "3E3466",
+        Brick = "4E4476", BrickDark = "241E3E", Glow = "D8C8FF",
+        Decor = { "Stars", "✦", "D8C8FF" }, Particle = { "✦", false, "D8C8FF" },
     })
 end
 
@@ -1086,6 +1124,11 @@ Sprite.Art = {
         "....kkkk....", "..kkrrwwkk..", ".krrrrwwwrk.", ".kwwrrwwrrk.",
         "kwwwwrrrrrrk", "kwwwwrrrwwrk", "krwwrrrwwwwk", "krrrrrrwwwrk",
         "kkkkkkkkkkkk", ".kssksskssk.", ".kssksskssk.", "..kkkkkkkk..",
+    },
+    goomba = {
+        "....kkkk....", "..kkBBBBkk..", ".kBBBBBBBBk.", "kBBBBBBBBBBk",
+        "kBkkBBBBkkBk", "kwwkkBBkkwwk", "kwwwkBBkwwwk", "kBwwBBBBwwBk",
+        ".kkssssssskk", "..kssssssk..", ".kmmmkkkmmmk", "..kkk..kkk..",
     },
     star = {
         ".....kk.....", "....kyyk....", "....kyyk....", "kkkkkyykkkkk",
@@ -3861,28 +3904,28 @@ function Draw.Emblem(parent, size)
 
     local model = Instance.new("Model")
     model.Parent = viewport
-    local solid, accent = {}, Color3.fromRGB(225, 29, 46)
-    local function bar(sz, pos, neon)
+    local solid, accent = {}, Color3.fromRGB(229, 37, 33)
+    local function bar(sz, pos, neon, roll, offset)
         local part = Instance.new("Part")
         part.Anchored, part.CanCollide, part.CanQuery, part.CanTouch = true, false, false, false
         part.Size = sz
-        part.CFrame = CFrame.new(pos)
+        part.CFrame = CFrame.new(pos) * CFrame.Angles(0, 0, roll or 0) * CFrame.new(offset or Vector3.zero)
         part.Material = neon and Enum.Material.Neon or Enum.Material.SmoothPlastic
-        part.Color = neon and Color3.fromRGB(255, 120, 130) or accent
-        if neon then part.Transparency = 0.55 else solid[#solid + 1] = part end
+        part.Color = neon and Color3.fromRGB(255, 220, 96) or accent
+        if neon then part.Transparency = 0.45 else solid[#solid + 1] = part end
         part.Parent = model
     end
     local depth = 1.5
-    bar(Vector3.new(1.1, 5.3, depth), Vector3.new(-1, 0, 0))
-    bar(Vector3.new(3.2, 1.1, depth), Vector3.new(0, 2.1, 0))
-    bar(Vector3.new(2.5, 1.1, depth), Vector3.new(-0.3, 0, 0))
-    bar(Vector3.new(3.2, 1.1, depth), Vector3.new(0, -2.1, 0))
+    local lean = -math.rad(34.4)
+    bar(Vector3.new(3.8, 1.05, depth), Vector3.new(0, 2.15, 0))
+    bar(Vector3.new(3.8, 1.05, depth), Vector3.new(0, -2.15, 0))
+    bar(Vector3.new(1.05, 4.9, depth), Vector3.new(0, 0, 0), false, lean)
     local z = depth / 2 + 0.02
-    bar(Vector3.new(0.35, 5.0, 0.04), Vector3.new(-1.35, 0, z), true)
-    bar(Vector3.new(2.9, 0.3, 0.04), Vector3.new(0.05, 2.35, z), true)
-    bar(Vector3.new(2.9, 0.3, 0.04), Vector3.new(0.05, -1.85, z), true)
+    bar(Vector3.new(3.4, 0.28, 0.04), Vector3.new(0, 2.4, z), true)
+    bar(Vector3.new(3.4, 0.28, 0.04), Vector3.new(0, -1.9, z), true)
+    bar(Vector3.new(0.28, 4.4, 0.04), Vector3.new(0, 0, z), true, lean, Vector3.new(-0.3, 0, 0))
 
-    local dark = Color3.fromRGB(120, 12, 24)
+    local dark = Color3.fromRGB(132, 16, 18)
     local start = os.clock()
     local conn
     conn = RunService.RenderStepped:Connect(function()
@@ -14633,12 +14676,15 @@ Config.Decor = {
     TwinkleSpeed = 3, TwinkleAlpha = 0.85, StarAlpha = 0.2, Twinkles = 2,
     Parallax = { Pad = 48, Far = 0.45, Speed = "Soft", Spring = { Damping = 0.85 } },
     Scenes = {
-        Overworld = { Clouds = true, Hills = true },
-        Light = { Clouds = true, Hills = true },
+        Overworld = { Clouds = true, Hills = true, Blocks = true },
+        Light = { Clouds = true, Hills = true, Blocks = true },
         Dark = { Stars = true },
         Underground = { Ceiling = true, Stars = true },
         Castle = { Torches = true, Lava = true },
         ["Star Road"] = { Stars = true, Shooting = true },
+        Underwater = { Stars = true },
+        Desert = { Clouds = true, Hills = true, Blocks = true },
+        ["Ghost House"] = { Stars = true },
     },
     Clouds = { { 0.46, 50, 44, "Near" }, { 0.62, 58, 30, "Far" }, { 0.78, 48, 38, "Near" }, { 0.92, 60, 26, "Far" } },
     Hills = { { 0.5, 96, 20, "Far" }, { 0.66, 120, 28, "Near" }, { 0.86, 90, 16, "Far" } },
@@ -14648,10 +14694,12 @@ Config.Decor = {
     Ceiling = 10, CeilingAlpha = 0.35, CeilingColumns = 24,
     Shooting = { Every = 28, Size = 14, Speed = 2.2, Travel = 0.3 },
     Lava = { Height = 90, Alpha = 0.55, Pulse = 0.2, Every = 6, Speed = 1.5 },
-    Walker = { Size = 14, Every = 12, Speed = 0.8, Hop = 120, HopDamping = 0.45, Margin = 0.06, Art = "mushroom", MinWidth = 360 },
+    Walker = { Size = 14, Every = 12, Speed = 0.8, Hop = 120, HopDamping = 0.45, Margin = 0.06, Art = "goomba", MinWidth = 360 },
     Burst = { Count = 5, Reach = 22, Glyph = "✦", Size = { 9, 13 }, Fade = "Soft" },
     Bump = { Velocity = 260, Damping = 0.4 },
     Lift = 3,
+    Blocks = { { 0.58, 66, "qblock" }, { 0.62, 66, "brick" }, { 0.66, 66, "qblock" }, { 0.70, 66, "brick" }, { 0.74, 66, "qblock" } },
+    BlockSize = 18, BumpEvery = 3, BumpVelocity = 170, BumpDamping = 0.4,
 }
 Config.Particles.Spawn = 0.8
 Config.Particles.Size = { 9, 16 }
@@ -14694,11 +14742,12 @@ end
 ---@return table  handle for Decor.Shift
 function Decor.Attach(host)
     local pad = Config.Decor.Parallax.Pad
-    local handle = { Host = host, Clouds = {}, Stars = {}, Hills = {}, Torches = {} }
+    local handle = { Host = host, Clouds = {}, Stars = {}, Hills = {}, Torches = {}, Blocks = {} }
     handle.Far = Draw.New("Frame", { Name = "Far", BackgroundTransparency = 1, Size = UDim2.new(1, pad * 2, 1, 0), ZIndex = Config.Chrome.Z.SkyFar, Parent = host })
     handle.Near = Draw.New("Frame", { Name = "Near", BackgroundTransparency = 1, Size = UDim2.new(1, pad * 2, 1, 0), ZIndex = Config.Chrome.Z.SkyNear, Parent = host })
     Decor.BuildHills(handle)
     Decor.BuildClouds(handle)
+    Decor.BuildBlocks(handle)
     Decor.BuildStars(handle)
     Decor.BuildTorches(handle)
     Decor.BuildCeiling(handle)
@@ -14757,6 +14806,22 @@ function Decor.BuildHills(handle)
     end
 end
 
+function Decor.BuildBlocks(handle)
+    local decor = Config.Decor
+    for _, spot in ipairs(decor.Blocks) do
+        local holder = Draw.New("Frame", {
+            Name = "Block",
+            BackgroundTransparency = 1,
+            Position = UDim2.new(spot[1], 0, 0, spot[2]),
+            Size = UDim2.fromOffset(decor.BlockSize, decor.BlockSize),
+            Parent = handle.Near,
+        })
+        local hop = Draw.New("Frame", { Name = "Hop", BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Parent = holder })
+        Sprite.New(hop, spot[3], decor.BlockSize)
+        handle.Blocks[#handle.Blocks + 1] = { Frame = holder, Hop = hop }
+    end
+end
+
 function Decor.BuildStars(handle)
     local decor = Config.Decor
     for _, spot in ipairs(decor.Stars) do
@@ -14804,6 +14869,9 @@ function Decor.Render(handle)
     end
     for _, hill in ipairs(handle.Hills) do
         hill.Visible = roomy and scene.Hills == true
+    end
+    for _, block in ipairs(handle.Blocks) do
+        block.Frame.Visible = roomy and scene.Blocks == true
     end
     for _, star in ipairs(handle.Stars) do
         star.Text = Theme.Colors.DecorGlyph or "✦"
@@ -14933,6 +15001,13 @@ function Decor.Animate(handle, ticks)
     for _, torch in ipairs(handle.Torches) do
         if torch.Frame.Visible then
             Motion.Impulse(torch.Flame, "Size", { 0, 0, 0, math.random(-decor.Flicker, decor.Flicker) }, "Fast", 0.3)
+        end
+    end
+    local blocks = handle.Blocks
+    if #blocks > 0 and ticks % decor.BumpEvery == 0 then
+        local block = blocks[math.random(#blocks)]
+        if block.Frame.Visible then
+            Motion.Impulse(block.Hop, "Position", { 0, 0, 0, -decor.BumpVelocity }, "Fast", decor.BumpDamping)
         end
     end
     if handle.Shooting.Visible and ticks % decor.Shooting.Every == 0 then
