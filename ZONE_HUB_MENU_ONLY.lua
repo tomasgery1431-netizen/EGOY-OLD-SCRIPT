@@ -114,7 +114,7 @@ local Config = {
     TitleColors = { "Accent", "Coin", "Good", "Info" },
 }
 
-local Themes = { Order = { "Overworld", "Light", "Dark", "Underground", "Castle", "Star Road", "Underwater", "Desert", "Ghost House" } }
+local Themes = { Order = { "Overworld", "Light", "Dark", "Underground", "Castle", "Star Road" } }
 
 do
     local function FromHex(hex)
@@ -149,16 +149,16 @@ do
     Themes.Shared = Palette({ White = "FFFFFF", Black = "000000", Ink = "2E2838", HeroInk = "2E2838", Knob = "FFFFFF" })
 
     Themes.Overworld = Palette({
-        Backdrop = "6FA4FF", BackdropAlt = "BCDCFF", Topbar = "5C94FC", TopbarText = "FFFFFF",
-        Sidebar = "C84C0C", SidebarAlt = "9C3A08", SidebarText = "FFF4E0", SidebarMuted = "F8B878",
-        TabActive = "FFEBA8", TabActiveText = "C0281C",
-        Panel = "FFF8E6", PanelHeader = "FCE9B8", Element = "FFFDF4", Hover = "FDEFC9", Pressed = "E8D3A0",
-        Outline = "2B1B14", Shadow = "3E5FB0", Text = "3A2418", SubText = "7A5A3E", Muted = "B09A78", Track = "E8D8B0",
-        Accent = "E52521", AccentDark = "A81814", AccentText = "FFFFFF",
-        Good = "43B047", Warn = "FCA044", Bad = "E52521", Info = "049CD8",
-        Coin = "FCD000", Cloud = "FFFFFF", CloudAlpha = 0, Grass = "58B83C", GrassDark = "2C8A24",
-        Brick = "C84C0C", BrickDark = "7C2C00", Glow = "FFE9A0",
-        Decor = { "Clouds" }, Particle = { "✦", false, "FFE27A" },
+        Backdrop = "C9DAEE", BackdropAlt = "E4EBF4", Topbar = "7896CC", TopbarText = "FFFFFF",
+        Sidebar = "9A5D44", SidebarAlt = "844E39", SidebarText = "FCF2E6", SidebarMuted = "E3C7B3",
+        TabActive = "FBF5EA", TabActiveText = "B8463A",
+        Panel = "FAF6EE", PanelHeader = "F1E8D6", Element = "FFFCF7", Hover = "F0E4CE", Pressed = "DCCDB2",
+        Outline = "40394B", Shadow = "7E86A4", Text = "3A3028", SubText = "76685A", Muted = "A29684", Track = "DFD5C5",
+        Accent = "D45446", AccentDark = "A23A30", AccentText = "FFFFFF",
+        Good = "62A964", Warn = "E2A447", Bad = "D45446", Info = "5A8FC6",
+        Coin = "EEC452", Cloud = "FFFFFF", CloudAlpha = 0.25, Grass = "78B460", GrassDark = "548A44",
+        Brick = "A66446", BrickDark = "6A3D2A", Glow = "FFF0C2",
+        Decor = { "Clouds" }, Particle = { "✦", false, "F3D88A" },
     })
 
     Themes.Light = Palette({
@@ -224,44 +224,6 @@ do
         Coin = "F0C858", Cloud = "FBE38C", CloudAlpha = 0.8, Grass = "EEC452", GrassDark = "B88E2E",
         Brick = "5B3AA6", BrickDark = "2B1A58", Glow = "FFE59A",
         Decor = { "Stars", "★", "F8D86A" }, Particle = { "★", false, "F8D86A" },
-    })
-    Themes.Underwater = Palette({
-        Backdrop = "2A86C8", BackdropAlt = "7BCDEB", Topbar = "1A6BAE", TopbarText = "FFFFFF",
-        Sidebar = "2E9C8E", SidebarAlt = "227A70", SidebarText = "F2FFFB", SidebarMuted = "A8E6DA",
-        TabActive = "FFF4B8", TabActiveText = "1A6BAE",
-        Panel = "F2FCFF", PanelHeader = "D5F0F8", Element = "FFFFFF", Hover = "E0F5FA", Pressed = "BFE4EE",
-        Outline = "0F2A44", Shadow = "14507F", Text = "153247", SubText = "46708A", Muted = "8DB3C6", Track = "CBE7F0",
-        Accent = "FF6A4D", AccentDark = "C84630", AccentText = "FFFFFF",
-        Good = "43B047", Warn = "FCA044", Bad = "E52521", Info = "049CD8",
-        Coin = "FCD000", Cloud = "CFF4FF", CloudAlpha = 0.55, Grass = "E9D9A0", GrassDark = "BDA868",
-        Brick = "D8BE86", BrickDark = "9C8650", Glow = "CFF4FF",
-        Decor = { "Stars", "•", "DFF8FF" }, Particle = { "•", false, "DFF8FF" },
-    })
-
-    Themes.Desert = Palette({
-        Backdrop = "F6C770", BackdropAlt = "FFE6A8", Topbar = "F09A3E", TopbarText = "FFFFFF",
-        Sidebar = "B8742E", SidebarAlt = "925820", SidebarText = "FFF6E2", SidebarMuted = "F2CC94",
-        TabActive = "FFF0B8", TabActiveText = "B8321C",
-        Panel = "FFF9EA", PanelHeader = "FBE8BC", Element = "FFFEF6", Hover = "FDEFCB", Pressed = "EAD3A2",
-        Outline = "3A2414", Shadow = "B8742E", Text = "3A2616", SubText = "7E5C3A", Muted = "B8A07C", Track = "ECDAB2",
-        Accent = "E5402A", AccentDark = "A82A18", AccentText = "FFFFFF",
-        Good = "58A83C", Warn = "FCA044", Bad = "E5402A", Info = "049CD8",
-        Coin = "FCD000", Cloud = "FFF2D0", CloudAlpha = 0.2, Grass = "E4B05A", GrassDark = "B88438",
-        Brick = "D69A4A", BrickDark = "8C5A22", Glow = "FFE9A0",
-        Decor = { "Clouds" }, Particle = { "✦", false, "FFE2A0" },
-    })
-
-    Themes["Ghost House"] = Palette({
-        Backdrop = "2A2440", BackdropAlt = "3A3158", Topbar = "1E1A32", TopbarText = "F4EEFF",
-        Sidebar = "4A4272", SidebarAlt = "393258", SidebarText = "F4EEFF", SidebarMuted = "B4AAD8",
-        TabActive = "F2F0FF", TabActiveText = "4A3A90",
-        Panel = "322C4E", PanelHeader = "3C3560", Element = "453D6A", Hover = "52497C", Pressed = "362F56",
-        Outline = "0C0916", Shadow = "0C0916", Text = "F4EEFF", SubText = "C0B6E0", Muted = "8E84B4", Track = "554C80",
-        Accent = "9A6CF0", AccentDark = "6C46B4", AccentText = "FFFFFF",
-        Good = "62C08E", Warn = "E8B354", Bad = "E0645E", Info = "7FA3F2",
-        Coin = "F0C858", Cloud = "E8E2FF", CloudAlpha = 0.85, Grass = "5A4C8C", GrassDark = "3E3466",
-        Brick = "4E4476", BrickDark = "241E3E", Glow = "D8C8FF",
-        Decor = { "Stars", "✦", "D8C8FF" }, Particle = { "✦", false, "D8C8FF" },
     })
 end
 
@@ -3904,15 +3866,15 @@ function Draw.Emblem(parent, size)
 
     local model = Instance.new("Model")
     model.Parent = viewport
-    local solid, accent = {}, Color3.fromRGB(229, 37, 33)
+    local solid, accent = {}, Color3.fromRGB(225, 29, 46)
     local function bar(sz, pos, neon, roll, offset)
         local part = Instance.new("Part")
         part.Anchored, part.CanCollide, part.CanQuery, part.CanTouch = true, false, false, false
         part.Size = sz
         part.CFrame = CFrame.new(pos) * CFrame.Angles(0, 0, roll or 0) * CFrame.new(offset or Vector3.zero)
         part.Material = neon and Enum.Material.Neon or Enum.Material.SmoothPlastic
-        part.Color = neon and Color3.fromRGB(255, 220, 96) or accent
-        if neon then part.Transparency = 0.45 else solid[#solid + 1] = part end
+        part.Color = neon and Color3.fromRGB(255, 120, 130) or accent
+        if neon then part.Transparency = 0.55 else solid[#solid + 1] = part end
         part.Parent = model
     end
     local depth = 1.5
@@ -3925,7 +3887,7 @@ function Draw.Emblem(parent, size)
     bar(Vector3.new(3.4, 0.28, 0.04), Vector3.new(0, -1.9, z), true)
     bar(Vector3.new(0.28, 4.4, 0.04), Vector3.new(0, 0, z), true, lean, Vector3.new(-0.3, 0, 0))
 
-    local dark = Color3.fromRGB(132, 16, 18)
+    local dark = Color3.fromRGB(120, 12, 24)
     local start = os.clock()
     local conn
     conn = RunService.RenderStepped:Connect(function()
@@ -14682,9 +14644,6 @@ Config.Decor = {
         Underground = { Ceiling = true, Stars = true },
         Castle = { Torches = true, Lava = true },
         ["Star Road"] = { Stars = true, Shooting = true },
-        Underwater = { Stars = true },
-        Desert = { Clouds = true, Hills = true, Blocks = true },
-        ["Ghost House"] = { Stars = true },
     },
     Clouds = { { 0.46, 50, 44, "Near" }, { 0.62, 58, 30, "Far" }, { 0.78, 48, 38, "Near" }, { 0.92, 60, 26, "Far" } },
     Hills = { { 0.5, 96, 20, "Far" }, { 0.66, 120, 28, "Near" }, { 0.86, 90, 16, "Far" } },
