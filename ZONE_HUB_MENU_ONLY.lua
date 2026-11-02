@@ -1124,6 +1124,11 @@ Sprite.Art = {
         "BBmBBBBBmBBB", "mmmmmmmmmmmm", "BBBBBmBBBBBm", "BBBBBmBBBBBm",
         "mmmmmmmmmmmm", "BBmBBBBBmBBB", "BBmBBBBBmBBB", "mmmmmmmmmmmm",
     },
+    hard = {
+        "kkkkkkkkkkkk", "kooooooooomk", "koBBBBBBBBmk", "koBBBBBBBBmk",
+        "koBBBBBBBBmk", "koBBBBBBBBmk", "koBBBBBBBBmk", "koBBBBBBBBmk",
+        "koBBBBBBBBmk", "koBBBBBBBBmk", "kommmmmmmmmk", "kkkkkkkkkkkk",
+    },
     pipe = {
         "kkkkkkkkkkkk", "klgggggggGGk", "klgggggggGGk", "klgggggggGGk",
         "kkkkkkkkkkkk", ".klggggggGk.", ".klggggggGk.", ".klggggggGk.",
@@ -11250,7 +11255,7 @@ function Float.Build()
     button.Size = UDim2.fromOffset(size, size)
     button.Visible = Float.Wanted == nil and Platform.Touch or Float.Wanted == true
     button.Parent = layer
-    Draw.Box("Frame", { Name = "Shadow", Position = UDim2.fromOffset(4, 4), Size = UDim2.fromScale(1, 1), BackgroundTransparency = 0.35, Parent = button }, "Shadow", nil, 4)
+    Float.Shadow = Draw.Box("Frame", { Name = "Shadow", AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(0.5, 0, 1, -2), Size = UDim2.fromOffset(size * 0.66, math.max(6, size * 0.15)), BackgroundTransparency = 0.6, Parent = button }, "Outline", nil, UDim.new(1, 0))
     Float.Slot = Draw.New("Frame", { Name = "Slot", BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Parent = button })
     Float.Button, Float.Size = button, size
     Float.Sync()
@@ -11275,7 +11280,19 @@ function Float.Sync()
     end
     Float.Art = art
     Float.Slot:ClearAllChildren()
-    Sprite.New(Float.Slot, art, Float.Size)
+    local sprite = Sprite.New(Float.Slot, art, Float.Size)
+    sprite.AnchorPoint = Vector2.new(0.5, 0.5)
+    sprite.Position = UDim2.fromScale(0.5, 0.46)
+end
+
+---Squeezes the round ground shadow while Mario is in the air.
+function Float.PulseShadow(strength)
+    local shadow = Float.Shadow
+    if not shadow or not shadow.Parent or Motion.Reduced then
+        return
+    end
+    local hop = Config.Overlay.Float.Hop * strength
+    Motion.Impulse(shadow, "Size", { 0, -hop * 0.5, 0, -hop * 0.18 }, "Fast", 0.4)
 end
 
 function Float.OnPress(pressed)
@@ -11284,6 +11301,7 @@ end
 
 function Float.OnClick()
     Motion.Impulse(Float.Slot, "Position", { 0, 0, 0, -Config.Overlay.Float.Hop }, "Fast", 0.4)
+    Float.PulseShadow(1)
     Motion.CoinPop(Float.Button, UDim2.fromScale(0.5, 0))
     local window = State.Window or Library.Window
     if window and window.Toggle then
@@ -11304,6 +11322,7 @@ function Float.Hop()
         return
     end
     Motion.Impulse(Float.Slot, "Position", { 0, 0, 0, -settings.Hop * 0.6 }, "Normal", 0.35)
+    Float.PulseShadow(0.6)
 end
 
 ---@param size number  px (clamped 44-96)
@@ -11315,6 +11334,9 @@ function Float.SetSize(size)
     end
     Float.Size = Float.SizeOverride
     button.Size = UDim2.fromOffset(Float.Size, Float.Size)
+    if Float.Shadow then
+        Motion.Set(Float.Shadow, "Size", UDim2.fromOffset(Float.Size * 0.66, math.max(6, Float.Size * 0.15)))
+    end
     Float.Art = nil
     Float.Sync()
     Float.Reclamp()
@@ -11906,6 +11928,34 @@ function Window:EmitState()
     end
 end
 
+Config.Pattern = {
+    Columns = 14, Rows = 9, Every = 5, Tile = 24, Fade = 0.8, Offset = 0.5,
+    Art = { "brick", "qblock", "hard", "brick", "used", "coin" },
+}
+
+---Scattered Mario blocks (brick, ?-block, hard block, used block, coin) as a soft watermark behind everything.
+function Window:BuildPattern()
+    local pattern = Config.Pattern
+    local layer = Draw.New("CanvasGroup", {
+        Name = "Pattern",
+        BackgroundTransparency = 1,
+        GroupTransparency = pattern.Fade,
+        Size = UDim2.fromScale(1, 1),
+        ZIndex = Config.Chrome.Z.Ambient,
+        Parent = self.Body,
+    })
+    for row = 0, pattern.Rows - 1 do
+        for column = 0, pattern.Columns - 1 do
+            if (column + row * 2) % pattern.Every == 0 then
+                local art = pattern.Art[(column * 7 + row * 3) % #pattern.Art + 1]
+                local tile = Sprite.New(layer, art, pattern.Tile)
+                tile.Position = UDim2.new((column + pattern.Offset) / pattern.Columns, -pattern.Tile / 2, (row + pattern.Offset) / pattern.Rows, -pattern.Tile / 2)
+            end
+        end
+    end
+    self.Pattern = layer
+end
+
 function Window:BuildFrame()
     local z, shadow, radius = Config.Chrome.Z, Config.Window.Shadow, Config.Window.Radius
     self.Root = Draw.New("Frame", { Name = "Window", BackgroundTransparency = 1, AnchorPoint = Vector2.new(0.5, 0), ZIndex = Config.Layer.Window, Parent = State.Stage })
@@ -11926,6 +11976,7 @@ function Window:BuildFrame()
     Theme.OnRender(fill, function()
         fill.Color = ColorSequence.new(Theme.Color("Backdrop"), Theme.Color("BackdropAlt"))
     end)
+    self:BuildPattern()
     self:BuildOutline()
     self:BuildPipe()
 end
