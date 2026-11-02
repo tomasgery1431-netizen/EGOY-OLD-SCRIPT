@@ -1087,6 +1087,23 @@ Sprite.Art = {
         "kwwwwrrrrrrk", "kwwwwrrrwwrk", "krwwrrrwwwwk", "krrrrrrwwwrk",
         "kkkkkkkkkkkk", ".kssksskssk.", ".kssksskssk.", "..kkkkkkkk..",
     },
+    mario = {
+        ".....kkkkkk..kk.", "....krrrrrrkkwwk", "...krrrrrrrrrwwk", "...kmmmsssmsrrwk",
+        "..kmsmsssmsssrrk", "..kmsmmsssmsssk.", "..kmmsssssmmmk..", "...kksssssssk...",
+        "..krrrbrrrbrrk..", ".kwrrrbbrbbrrk..", "kwwrrbbbbbbrsk..", "kwssbbybbybbssk.",
+        ".kssbbbbbbbbssk.", "..kbbbbbbbbbmmk.", ".kmmbbbkkbbmmmmk", "..kkkkk..kkkkkk.",
+    },
+    mariostand = {
+        "....kkkkkkk.....", "...krrrrrrrkk...", "..krrrrrrrrrrk..", "..kmmmsssmsskk..",
+        ".kmsmsssmsssssk.", ".kmsmmsssmsssssk", ".kmmsssssmmmmkk.", "..kksssssssssk..",
+        "..krrrbrrrrkk...", ".krrrrbrrbrrrkk.", "krrrrbbbbbbrrrrk", "kssrbbybbybbrssk",
+        "ksssbbbbbbbbsssk", "ksskbbbbbbbbkssk", ".kkmmmkkkkmmmkk.", "...kkk....kkk...",
+    },
+    goomba = {
+        "....kkkk....", "..kkBBBBkk..", ".kBBBBBBBBk.", "kBBBBBBBBBBk",
+        "kBkkBBBBkkBk", "kwwkkBBkkwwk", "kwwwkBBkwwwk", "kBwwBBBBwwBk",
+        ".kkssssssskk", "..kssssssk..", ".kmmmkkkmmmk", "..kkk..kkk..",
+    },
     star = {
         ".....kk.....", "....kyyk....", "....kyyk....", "kkkkkyykkkkk",
         "kyyyyyyyyyyk", ".kyykyykyyk.", "..kykyykyk..", "...kyyyyk...",
@@ -1234,6 +1251,11 @@ function Sprite.New(parent, name, size)
     else
         sprite = Sprite.Template(key):Clone()
         Assets.Later(pending, sprite)
+        local art = Sprite.Art[key]
+        local grid = art and #art[1] or 12
+        if grid ~= 12 then
+            size = math.max(grid, math.floor(size / grid) * grid)
+        end
     end
     sprite.Size = UDim2.fromOffset(size, size)
     sprite.Parent = parent
@@ -11247,7 +11269,7 @@ function Float.Sync()
     if not Float.Slot then
         return
     end
-    local art = open and "used" or "qblock"
+    local art = open and "mariostand" or "mario"
     if Float.Art == art then
         return
     end
@@ -11278,7 +11300,7 @@ function Float.Hop()
     local settings = Config.Overlay.Float
     task.delay(settings.HopEvery, Float.Hop)
     Float.Sync()
-    if not button.Visible or Motion.Reduced or Float.Art ~= "qblock" or Popup.Drag.Active then
+    if not button.Visible or Motion.Reduced or Float.Art ~= "mario" or Popup.Drag.Active then
         return
     end
     Motion.Impulse(Float.Slot, "Position", { 0, 0, 0, -settings.Hop * 0.6 }, "Normal", 0.35)
@@ -12196,11 +12218,11 @@ function Window:BuildTopButtons()
     self.SearchButton = self:BlockButton("SearchButton", "search", 3, function()
         Search.OpenSheet(self)
     end)
-    self.MinimizeButton = self:BlockButton("Minimize", "qblock", 4, function()
+    self.MinimizeButton = self:BlockButton("Minimize", "mario", 4, function()
         self:SetMinimized(not self.Minimized)
     end)
-    Window.SetArt(self.MinimizeButton, "used")
-    Window.SetArt(self.MinimizeButton, "qblock")
+    Window.SetArt(self.MinimizeButton, "mariostand")
+    Window.SetArt(self.MinimizeButton, "mario")
     self.CloseButton = self:BlockButton("Close", "pipe", 5, function()
         self:Hide()
     end)
@@ -13157,7 +13179,7 @@ function Window:SetMinimized(minimized)
     local shadow = Config.Window.Shadow
     local height = minimized and self:HeaderHeight() or self.Size.Y
     Motion.Spring(self.Root, "Size", UDim2.fromOffset(self.Size.X + shadow, height + shadow), "Normal", Config.Chrome.MinimizeSpring)
-    Window.SetArt(self.MinimizeButton, minimized and "used" or "qblock")
+    Window.SetArt(self.MinimizeButton, minimized and "mariostand" or "mario")
     self.Grip.Visible = not minimized and self.Mode ~= "Phone"
     Float.Sync()
     self:EmitState()
@@ -14143,7 +14165,7 @@ end
 Config.Intro = {
     Width = 440, Height = 236, Margin = 16, MaxScale = 1.35, Scrim = 0.12,
     MinShow = 1.5, MaxShow = 2.2, Exit = 0.32, Flourish = 0.12, Hold = 0, StepTimeout = 15,
-    Block = 56, BlockY = 62, Bump = 0.24, Open = 0.5,
+    Block = 64, BlockY = 62, Bump = 0.24, Open = 0.5,
     Coin = 30, CoinRise = 58, CoinSpin = 520,
     Letter = 62, LogoY = 20, LetterRise = 18, Drop = 5, Stagger = 0.04,
     SubY = 104, SubSize = 18,
@@ -14295,7 +14317,7 @@ function Intro.Block(stage)
     local intro = Config.Intro
     local holder = Draw.New("Frame", { Name = "Block", BackgroundTransparency = 1, AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromOffset(intro.Width / 2, intro.BlockY), Size = UDim2.fromOffset(intro.Block, intro.Block), ZIndex = Config.Z.Raised, Parent = stage })
     local scale = Draw.New("UIScale", { Scale = 0, Parent = holder })
-    local sprite = Sprite.New(holder, "qblock", intro.Block)
+    local sprite = Sprite.New(holder, "mariostand", intro.Block)
     sprite.ZIndex = Config.Z.Raised
     return { Holder = holder, Scale = scale, Sprite = sprite }
 end
@@ -14412,7 +14434,7 @@ function Intro.HitBlock(parts)
     local intro = Config.Intro
     local block = parts.Block
     block.Sprite:Destroy()
-    block.Sprite = Sprite.New(block.Holder, "used", intro.Block)
+    block.Sprite = Sprite.New(block.Holder, "mario", intro.Block)
     block.Sprite.ZIndex = Config.Z.Raised
     Motion.Impulse(block.Holder, "Position", { 0, 0, 0, -320 }, "Fast", 0.4)
     local coin = parts.Coin
@@ -14648,7 +14670,7 @@ Config.Decor = {
     Ceiling = 10, CeilingAlpha = 0.35, CeilingColumns = 24,
     Shooting = { Every = 28, Size = 14, Speed = 2.2, Travel = 0.3 },
     Lava = { Height = 90, Alpha = 0.55, Pulse = 0.2, Every = 6, Speed = 1.5 },
-    Walker = { Size = 14, Every = 12, Speed = 0.8, Hop = 120, HopDamping = 0.45, Margin = 0.06, Art = "mushroom", MinWidth = 360 },
+    Walker = { Size = 14, Every = 12, Speed = 0.8, Hop = 120, HopDamping = 0.45, Margin = 0.06, Art = "goomba", MinWidth = 360 },
     Burst = { Count = 5, Reach = 22, Glyph = "✦", Size = { 9, 13 }, Fade = "Soft" },
     Bump = { Velocity = 260, Damping = 0.4 },
     Lift = 3,
@@ -21006,27 +21028,41 @@ Library.Themes = Themes.Order
 Library.Util = Util
 
 -- ===== ZONE HUB · MENU (MARIO) + AUTO THROW TAB =====
--- One tab ("Throw") with one toggle ("Auto Throw"). Turning it on runs the
--- PerfectThrow logic (hook ThrowMeter, walk to target, auto-throw loop);
--- turning it off undoes everything. Wrapped in a function so it does not add
--- top-level locals to this very large file.
+-- One tab ("Main") with the "Auto Throw" toggle. Turning it on runs the full
+-- PerfectThrow logic (hook ThrowMeter, walk to target, auto-throw loop, auto
+-- continue, animation skip, auto prompt); turning it off undoes everything.
+-- Wrapped in a function so it does not add top-level locals to this very
+-- large file.
 
 local function CreateAutoThrow()
+    local ProximityPromptService = game:GetService("ProximityPromptService")
+
     local CONFIG = {
-        TeleportTargets  = {
-            Vector3.new(-5, 6, -45),
-        },
-        TeleportSettle   = 0.2,
-        AutoTapValue     = 0.6,
-        ExtraThrowProps  = {},
-        AutoThrowEnabled = true,
-        ThrowInterval    = 1.2,
-        EquipDelay       = 0.3,
+        TeleportTargets      = { Vector3.new(-5, 6, -45) },
+        TeleportSettle       = 0.2,
+
+        AutoTapValue         = 0.6,
+        ExtraThrowProps      = {},
+
+        AutoThrowEnabled     = true,
+        ThrowInterval        = 1.2,
+        EquipDelay           = 0.3,
+
+        AutoContinue         = true,
+        ContinueKeywords     = { "continue", "skip", "next", "proceed", "claim", "ok", "yes", "play again" },
+        ContinueScanInterval = 0.15,
+
+        SkipAnimations       = true,
+        AnimationSpeed       = 50,
+        MinAnimationLength   = 0.3,
+        AnimationExclude     = { "idle", "run", "walk", "jump", "fall", "swim", "climb", "sit" },
+
+        AutoPrompt           = true,
     }
 
     local player = LocalPlayer
-    local state = { enabled = false, depth = 0, running = false }
-    local runId = 0
+    local state = { enabled = false, depth = 0, running = false, animConn = nil, promptConn = nil }
+    local runId, continueId = 0, 0
     local meter, originalRun, charConn
 
     local function notify(text, kind)
@@ -21139,6 +21175,77 @@ local function CreateAutoThrow()
         return true
     end
 
+    local function setupAnimationSkipper()
+        if state.animConn then state.animConn:Disconnect() state.animConn = nil end
+        if not CONFIG.SkipAnimations then return end
+        local char = player.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        local animator = hum and hum:FindFirstChildOfClass("Animator")
+        if not animator then return end
+        state.animConn = animator.AnimationPlayed:Connect(function(track)
+            if not state.enabled or not CONFIG.SkipAnimations then return end
+            local anim = track.Animation
+            if not anim then return end
+            local length = anim.Length or 0
+            if length < CONFIG.MinAnimationLength then return end
+            local name = (anim.Name or ""):lower()
+            for _, ex in ipairs(CONFIG.AnimationExclude) do
+                if name:find(ex, 1, true) then return end
+            end
+            pcall(function() track:AdjustSpeed(CONFIG.AnimationSpeed) end)
+        end)
+    end
+
+    local function setupPromptAuto()
+        if state.promptConn then state.promptConn:Disconnect() state.promptConn = nil end
+        if not CONFIG.AutoPrompt then return end
+        state.promptConn = ProximityPromptService.PromptShown:Connect(function(prompt)
+            if not state.enabled then return end
+            pcall(function()
+                prompt:InputHoldBegin()
+                task.wait((prompt.HoldDuration or 0) + 0.05)
+                prompt:InputHoldEnd()
+            end)
+        end)
+    end
+
+    local function isContinueButton(gui)
+        if not gui:IsA("GuiButton") then return false end
+        if not gui.Visible then return false end
+        if gui.Active == false then return false end
+        -- never press the hub's own buttons
+        if State.Gui and gui:IsDescendantOf(State.Gui) then return false end
+        local txt = ""
+        if gui:IsA("TextButton") then txt = gui.Text or "" end
+        txt = (txt .. " " .. (gui.Name or "")):lower()
+        for _, kw in ipairs(CONFIG.ContinueKeywords) do
+            if txt:find(kw, 1, true) then return true end
+        end
+        return false
+    end
+
+    local function autoContinueScan(myLoop)
+        local playerGui = player:FindFirstChildOfClass("PlayerGui")
+        if not playerGui then return end
+        for _, gui in ipairs(playerGui:GetDescendants()) do
+            if not state.enabled or continueId ~= myLoop or not CONFIG.AutoContinue then return end
+            if isContinueButton(gui) then
+                pcall(function() gui:Activate() end)
+            end
+        end
+    end
+
+    local function autoContinueLoop()
+        continueId += 1
+        local myLoop = continueId
+        while state.enabled and continueId == myLoop do
+            task.wait(CONFIG.ContinueScanInterval)
+            if state.enabled and continueId == myLoop and CONFIG.AutoContinue then
+                autoContinueScan(myLoop)
+            end
+        end
+    end
+
     local function runSequence()
         if state.running then return end
         runId += 1
@@ -21179,11 +21286,17 @@ local function CreateAutoThrow()
             return false
         end
         state.enabled = true
+        setupAnimationSkipper()
+        setupPromptAuto()
         charConn = player.CharacterAdded:Connect(function()
             task.wait(0.5)
-            if state.enabled then task.defer(runSequence) end
+            if not state.enabled then return end
+            setupAnimationSkipper()
+            state.running = false
+            task.defer(runSequence)
         end)
         task.defer(runSequence)
+        task.defer(autoContinueLoop)
         return true
     end
 
@@ -21192,7 +21305,10 @@ local function CreateAutoThrow()
         state.enabled = false
         state.running = false
         runId += 1
+        continueId += 1
         if charConn then charConn:Disconnect() charConn = nil end
+        if state.animConn then state.animConn:Disconnect() state.animConn = nil end
+        if state.promptConn then state.promptConn:Disconnect() state.promptConn = nil end
         removeHook()
     end
 
