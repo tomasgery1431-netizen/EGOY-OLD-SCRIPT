@@ -21013,12 +21013,15 @@ Library.Util = Util
 
 local function CreateAutoThrow()
     local CONFIG = {
-        WalkTarget      = Vector3.new(0, 6, -45),
+        WalkTargets     = {
+            Vector3.new(-5, 6, -45),
+        },
         WalkSpeed       = 1000,
         WalkTimeout     = 30,
         WalkArriveDist  = 5,
         AutoTapValue    = 0.6,
         ExtraThrowProps = {},
+        AutoThrowEnabled = true,
         ThrowInterval   = 1.2,
         EquipDelay      = 0.3,
     }
@@ -21189,16 +21192,31 @@ local function CreateAutoThrow()
         runId += 1
         local myRun = runId
 
-        notify("Walking to target...")
-        local arrived = walkTo(CONFIG.WalkTarget, CONFIG.WalkTimeout)
-        if runId ~= myRun or not state.enabled then return end
-        notify(arrived and "Arrived, auto-throwing" or "Walk failed, throwing anyway", arrived and "Success" or "Warning")
-
+        notify("Auto-cycle started")
         state.throwing = true
-        while state.throwing and state.enabled and runId == myRun do
-            if player.Character then throwOnce() end
-            task.wait(CONFIG.ThrowInterval)
+
+        while state.enabled and runId == myRun do
+            for _, target in ipairs(CONFIG.WalkTargets) do
+                if not state.enabled or runId ~= myRun then break end
+
+                local arrived = walkTo(target, CONFIG.WalkTimeout)
+                if not state.enabled or runId ~= myRun then break end
+
+                if not arrived then
+                    notify("Walk timed out, throwing anyway", "Warning")
+                end
+
+                if CONFIG.AutoThrowEnabled then
+                    if player.Character then throwOnce() end
+                    task.wait(CONFIG.ThrowInterval)
+                end
+            end
+
+            if #CONFIG.WalkTargets == 0 or not CONFIG.AutoThrowEnabled then
+                task.wait(0.5)
+            end
         end
+
         if runId == myRun then state.throwing = false end
     end
 
@@ -21313,8 +21331,9 @@ table.insert(State.UnloadHooks, autoThrow.Stop)
 local autoTap = CreateAutoTapBonus()
 table.insert(State.UnloadHooks, autoTap.Stop)
 
-local throwTab = Window:AddTab("Throw", "hand", "Auto throw")
-local throwGroup = throwTab:AddGroupbox({ Name = "Throw", Side = "Left" })
+local mainTab = Window:AddTab("Main", "hand", "Features")
+
+local throwGroup = mainTab:AddGroupbox({ Name = "Auto Throw", Side = "Left" })
 throwGroup:AddToggle("AutoThrow", {
     Text = "Auto Throw",
     Default = false,
@@ -21333,8 +21352,7 @@ throwGroup:AddToggle("AutoThrow", {
     end,
 })
 
-local trainTab = Window:AddTab("Train", "sprout", "Training")
-local trainGroup = trainTab:AddGroupbox({ Name = "Train", Side = "Left" })
+local trainGroup = mainTab:AddGroupbox({ Name = "Train", Side = "Right" })
 trainGroup:AddToggle("AutoClick2xTrain", {
     Text = "Auto Click 2x on Train",
     Default = false,
