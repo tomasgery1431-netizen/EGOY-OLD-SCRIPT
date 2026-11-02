@@ -1087,11 +1087,6 @@ Sprite.Art = {
         "kwwwwrrrrrrk", "kwwwwrrrwwrk", "krwwrrrwwwwk", "krrrrrrwwwrk",
         "kkkkkkkkkkkk", ".kssksskssk.", ".kssksskssk.", "..kkkkkkkk..",
     },
-    goomba = {
-        "....kkkk....", "..kkBBBBkk..", ".kBBBBBBBBk.", "kBBBBBBBBBBk",
-        "kBkkBBBBkkBk", "kwwkkBBkkwwk", "kwwwkBBkwwwk", "kBwwBBBBwwBk",
-        ".kkssssssskk", "..kssssssk..", ".kmmmkkkmmmk", "..kkk..kkk..",
-    },
     star = {
         ".....kk.....", "....kyyk....", "....kyyk....", "kkkkkyykkkkk",
         "kyyyyyyyyyyk", ".kyykyykyyk.", "..kykyykyk..", "...kyyyyk...",
@@ -3867,25 +3862,25 @@ function Draw.Emblem(parent, size)
     local model = Instance.new("Model")
     model.Parent = viewport
     local solid, accent = {}, Color3.fromRGB(225, 29, 46)
-    local function bar(sz, pos, neon, roll, offset)
+    local function bar(sz, pos, neon)
         local part = Instance.new("Part")
         part.Anchored, part.CanCollide, part.CanQuery, part.CanTouch = true, false, false, false
         part.Size = sz
-        part.CFrame = CFrame.new(pos) * CFrame.Angles(0, 0, roll or 0) * CFrame.new(offset or Vector3.zero)
+        part.CFrame = CFrame.new(pos)
         part.Material = neon and Enum.Material.Neon or Enum.Material.SmoothPlastic
         part.Color = neon and Color3.fromRGB(255, 120, 130) or accent
         if neon then part.Transparency = 0.55 else solid[#solid + 1] = part end
         part.Parent = model
     end
     local depth = 1.5
-    local lean = -math.rad(34.4)
-    bar(Vector3.new(3.8, 1.05, depth), Vector3.new(0, 2.15, 0))
-    bar(Vector3.new(3.8, 1.05, depth), Vector3.new(0, -2.15, 0))
-    bar(Vector3.new(1.05, 4.9, depth), Vector3.new(0, 0, 0), false, lean)
+    bar(Vector3.new(1.1, 5.3, depth), Vector3.new(-1, 0, 0))
+    bar(Vector3.new(3.2, 1.1, depth), Vector3.new(0, 2.1, 0))
+    bar(Vector3.new(2.5, 1.1, depth), Vector3.new(-0.3, 0, 0))
+    bar(Vector3.new(3.2, 1.1, depth), Vector3.new(0, -2.1, 0))
     local z = depth / 2 + 0.02
-    bar(Vector3.new(3.4, 0.28, 0.04), Vector3.new(0, 2.4, z), true)
-    bar(Vector3.new(3.4, 0.28, 0.04), Vector3.new(0, -1.9, z), true)
-    bar(Vector3.new(0.28, 4.4, 0.04), Vector3.new(0, 0, z), true, lean, Vector3.new(-0.3, 0, 0))
+    bar(Vector3.new(0.35, 5.0, 0.04), Vector3.new(-1.35, 0, z), true)
+    bar(Vector3.new(2.9, 0.3, 0.04), Vector3.new(0.05, 2.35, z), true)
+    bar(Vector3.new(2.9, 0.3, 0.04), Vector3.new(0.05, -1.85, z), true)
 
     local dark = Color3.fromRGB(120, 12, 24)
     local start = os.clock()
@@ -14638,8 +14633,8 @@ Config.Decor = {
     TwinkleSpeed = 3, TwinkleAlpha = 0.85, StarAlpha = 0.2, Twinkles = 2,
     Parallax = { Pad = 48, Far = 0.45, Speed = "Soft", Spring = { Damping = 0.85 } },
     Scenes = {
-        Overworld = { Clouds = true, Hills = true, Blocks = true },
-        Light = { Clouds = true, Hills = true, Blocks = true },
+        Overworld = { Clouds = true, Hills = true },
+        Light = { Clouds = true, Hills = true },
         Dark = { Stars = true },
         Underground = { Ceiling = true, Stars = true },
         Castle = { Torches = true, Lava = true },
@@ -14653,12 +14648,10 @@ Config.Decor = {
     Ceiling = 10, CeilingAlpha = 0.35, CeilingColumns = 24,
     Shooting = { Every = 28, Size = 14, Speed = 2.2, Travel = 0.3 },
     Lava = { Height = 90, Alpha = 0.55, Pulse = 0.2, Every = 6, Speed = 1.5 },
-    Walker = { Size = 14, Every = 12, Speed = 0.8, Hop = 120, HopDamping = 0.45, Margin = 0.06, Art = "goomba", MinWidth = 360 },
+    Walker = { Size = 14, Every = 12, Speed = 0.8, Hop = 120, HopDamping = 0.45, Margin = 0.06, Art = "mushroom", MinWidth = 360 },
     Burst = { Count = 5, Reach = 22, Glyph = "✦", Size = { 9, 13 }, Fade = "Soft" },
     Bump = { Velocity = 260, Damping = 0.4 },
     Lift = 3,
-    Blocks = { { 0.58, 66, "qblock" }, { 0.62, 66, "brick" }, { 0.66, 66, "qblock" }, { 0.70, 66, "brick" }, { 0.74, 66, "qblock" } },
-    BlockSize = 18, BumpEvery = 3, BumpVelocity = 170, BumpDamping = 0.4,
 }
 Config.Particles.Spawn = 0.8
 Config.Particles.Size = { 9, 16 }
@@ -14701,12 +14694,11 @@ end
 ---@return table  handle for Decor.Shift
 function Decor.Attach(host)
     local pad = Config.Decor.Parallax.Pad
-    local handle = { Host = host, Clouds = {}, Stars = {}, Hills = {}, Torches = {}, Blocks = {} }
+    local handle = { Host = host, Clouds = {}, Stars = {}, Hills = {}, Torches = {} }
     handle.Far = Draw.New("Frame", { Name = "Far", BackgroundTransparency = 1, Size = UDim2.new(1, pad * 2, 1, 0), ZIndex = Config.Chrome.Z.SkyFar, Parent = host })
     handle.Near = Draw.New("Frame", { Name = "Near", BackgroundTransparency = 1, Size = UDim2.new(1, pad * 2, 1, 0), ZIndex = Config.Chrome.Z.SkyNear, Parent = host })
     Decor.BuildHills(handle)
     Decor.BuildClouds(handle)
-    Decor.BuildBlocks(handle)
     Decor.BuildStars(handle)
     Decor.BuildTorches(handle)
     Decor.BuildCeiling(handle)
@@ -14765,22 +14757,6 @@ function Decor.BuildHills(handle)
     end
 end
 
-function Decor.BuildBlocks(handle)
-    local decor = Config.Decor
-    for _, spot in ipairs(decor.Blocks) do
-        local holder = Draw.New("Frame", {
-            Name = "Block",
-            BackgroundTransparency = 1,
-            Position = UDim2.new(spot[1], 0, 0, spot[2]),
-            Size = UDim2.fromOffset(decor.BlockSize, decor.BlockSize),
-            Parent = handle.Near,
-        })
-        local hop = Draw.New("Frame", { Name = "Hop", BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Parent = holder })
-        Sprite.New(hop, spot[3], decor.BlockSize)
-        handle.Blocks[#handle.Blocks + 1] = { Frame = holder, Hop = hop }
-    end
-end
-
 function Decor.BuildStars(handle)
     local decor = Config.Decor
     for _, spot in ipairs(decor.Stars) do
@@ -14828,9 +14804,6 @@ function Decor.Render(handle)
     end
     for _, hill in ipairs(handle.Hills) do
         hill.Visible = roomy and scene.Hills == true
-    end
-    for _, block in ipairs(handle.Blocks) do
-        block.Frame.Visible = roomy and scene.Blocks == true
     end
     for _, star in ipairs(handle.Stars) do
         star.Text = Theme.Colors.DecorGlyph or "✦"
@@ -14960,13 +14933,6 @@ function Decor.Animate(handle, ticks)
     for _, torch in ipairs(handle.Torches) do
         if torch.Frame.Visible then
             Motion.Impulse(torch.Flame, "Size", { 0, 0, 0, math.random(-decor.Flicker, decor.Flicker) }, "Fast", 0.3)
-        end
-    end
-    local blocks = handle.Blocks
-    if #blocks > 0 and ticks % decor.BumpEvery == 0 then
-        local block = blocks[math.random(#blocks)]
-        if block.Frame.Visible then
-            Motion.Impulse(block.Hop, "Position", { 0, 0, 0, -decor.BumpVelocity }, "Fast", decor.BumpDamping)
         end
     end
     if handle.Shooting.Visible and ticks % decor.Shooting.Every == 0 then
