@@ -1,4 +1,4 @@
--- MARVEL HUB · Roblox UI
+-- MARVEL HUB UI V2 · Professional Marvel cinematic interface
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -13,8 +13,8 @@ local LocalPlayer = Players.LocalPlayer
 
 local Library = {
     Version = "2.0",
-    Author = "Marvel Hub",
-    Credit = "MARVEL HUB ·",
+    Author = "MARVEL HUB",
+    Credit = "MARVEL HUB UI V2 by MARVEL HUB ·",
     Options = {},
     Toggles = {},
     Unloaded = false,
@@ -22,7 +22,7 @@ local Library = {
 }
 
 local Config = {
-    GuiAttribute = "MarvelHub",
+    GuiAttribute = "MarvelHubV1",
     Root = "MarvelHub",
     AssetDir = "MarvelHub/assets",
     ConfigRoot = "MarvelHub/configs",
@@ -348,7 +348,7 @@ local Configs = { Folder = Config.ConfigRoot .. "/default" }
 local Settings = {}
 local Kit = {}
 
----@author xDTaraZ  Marvel Hub UI
+---@author xDTaraZ  Marvel Hub UI V2
 
 ---@return Vector2
 function Platform.ReadViewport()
@@ -484,7 +484,7 @@ end
 
 table.insert(State.UnloadHooks, Platform.UnbindCamera)
 
----@author xDTaraZ  Marvel Hub UI
+---@author xDTaraZ  Marvel Hub UI V2
 function Util.Try(callback, ...)
     if type(callback) ~= "function" then
         return false
@@ -1188,13 +1188,13 @@ Sprite.Art = {
 }
 
 Sprite.Alias = {
-    house = "castle", home = "castle", user = "hero", player = "hero", globe = "pipe", map = "pipe",
-    teleport = "pipe", eye = "agamotto", visuals = "agamotto", swords = "mjolnir", combat = "mjolnir", target = "bomb",
+    house = "reactor", home = "reactor", user = "hero", player = "hero", globe = "agamotto", map = "agamotto",
+    teleport = "teleport", eye = "agamotto", visuals = "agamotto", swords = "mjolnir", combat = "mjolnir", target = "bomb",
     crosshair = "bomb", shield = "shell", zap = "star", settings = "gear", ["sliders-horizontal"] = "gear",
     bell = "coin", shop = "coin", code = "infinitystone", info = "infinitystone", key = "key", play = "flag",
-    quest = "flag", heart = "heart", cookie = "reactor", ["trash-2"] = "bomb", terminal = "brick",
-    ["refresh-cw"] = "pipe", link = "pipe", copy = "brick", check = "star", save = "infinitystone",
-    download = "infinitystone", upload = "infinitystone", search = "agamotto", misc = "infinitystone", troll = "shell",
+    quest = "flag", heart = "heart", cookie = "reactor", ["trash-2"] = "bomb", terminal = "infinitystone",
+    ["refresh-cw"] = "refresh", link = "link", copy = "copy", check = "star", save = "infinitystone",
+    download = "infinitystone", upload = "infinitystone", search = "agamotto", misc = "infinitystone", troll = "villain",
 }
 
 Sprite.Swaps = {
@@ -1249,7 +1249,7 @@ end
 function Sprite.MarvelLogo(parent, standing, size, wide)
     local compact = not wide
     local width = compact and size or math.floor(size * 1.9)
-    local height = compact and size or math.floor(size * 0.62)
+    local height = math.max(22, math.floor(size * 0.62))
     if standing then height = math.max(8, height - 2) end
     local plate = Draw.New("Frame", {
         Name = "MarvelLogo", BackgroundColor3 = Color3.fromRGB(236, 29, 36), BorderSizePixel = 0,
@@ -1261,7 +1261,7 @@ function Sprite.MarvelLogo(parent, standing, size, wide)
     })
     Draw.New("UIStroke", { Color = Color3.fromRGB(70, 4, 8), Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Parent = plate })
     Draw.New("TextLabel", {
-        BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Text = compact and "M" or "MARVEL",
+        BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Text = "MARVEL",
         Font = Enum.Font.GothamBlack, TextScaled = true, TextColor3 = Color3.new(1, 1, 1), Parent = plate,
     })
     for _, child in ipairs(plate:GetChildren()) do
@@ -1306,7 +1306,7 @@ function Sprite.New(parent, name, size)
     return sprite
 end
 
----@author xDTaraZ  Marvel Hub UI
+---@author xDTaraZ  Marvel Hub UI V2
 Sprite.Palette.A = Color3.fromRGB(190, 60, 110)
 Sprite.Palette.C = Color3.fromRGB(0, 92, 164)
 Sprite.Palette.O = Color3.fromRGB(196, 84, 0)
@@ -3422,7 +3422,7 @@ Sprite.Alias["trigger bot"] = "triggerbot"
 Sprite.Alias["trigger-bot"] = "triggerbot"
 Sprite.Alias["trigger-switch"] = "portalswitch"
 Sprite.Alias["trolling"] = "troll"
-Sprite.Alias["tunnel"] = "pipe"
+Sprite.Alias["tunnel"] = "teleport"
 Sprite.Alias["turtle"] = "shell"
 Sprite.Alias["tutorial"] = "info"
 Sprite.Alias["tween"] = "teleport"
@@ -4532,7 +4532,7 @@ end
 
 function Motion.MakeCoin()
     local size = Config.Motion.Coin.Size
-    local coin = Sprite.New(nil, "coin", size)
+    local coin = Sprite.New(nil, "marvelstand", size)
     coin.AnchorPoint = Vector2.new(0.5, 1)
     coin.ZIndex = Config.Z.Pop
     return coin
@@ -11399,7 +11399,7 @@ function Float.Build()
     return button
 end
 
----Shows the ?-block while the menu is closed and the used block while it's open.
+---Shows the closed icon while the menu is closed and the open icon while it's open.
 function Float.Sync()
     local window = State.Window or Library.Window
     local open = window ~= nil and window.Visible ~= false and not window.Minimized
@@ -11917,10 +11917,10 @@ Config.Chrome = {
     Pages = { Budget = 0.003, Idle = 0.0015, Quiet = 0.4, Chunk = 60, Recheck = 0.25 },
     Cards = { Max = 8, Stagger = 0.035, Rise = 18, Scale = 0.95, Damping = 0.62 },
     Bar = { Height = 62, Gap = 8, Pad = 6, Shadow = 4, Icon = 24, Label = 11, ListGap = 2, Inset = 4 },
-    Ground = 26, Grass = 6, GrassEdge = 2, BrickColumns = 28,
+    Ground = 22, Grass = 0, GrassEdge = 0, BrickColumns = 0,
     Grip = { Desktop = 22, Tablet = 44 }, GripGlyph = 16, GripInset = 2,
-    Warp = { From = Vector2.new(0.16, 0.02), OpenX = 13, OpenY = 19, OpenDamping = 0.5, CloseX = 24, CloseY = 15, CloseDamping = 0.95 },
-    Pipe = { Width = 76, Lip = 18, LipOut = 8, Body = 30, Rise = 40, Stroke = 3, Shine = 0.55 },
+    Warp = { From = Vector2.new(0.12, 0.04), OpenX = 10, OpenY = 16, OpenDamping = 0.55, CloseX = 18, CloseY = 14, CloseDamping = 0.9 },
+    Pipe = { Width = 0, Lip = 0, LipOut = 0, Body = 0, Rise = 0, Stroke = 0, Shine = 0 },
     MinimizeSpring = { Damping = 0.55 },
     SearchWidth = { Desktop = 220, Tablet = 168 }, SearchIcon = 16, SearchPad = 10, Hint = "Ctrl K",
     PhoneMargin = 6,
@@ -12066,14 +12066,16 @@ Config.Pattern = {
     Art = { "shield", "reactor", "mjolnir", "infinitystone", "gauntlet", "repulsor" },
 }
 
--- Marvel Hub background. One picture covers the whole window.
--- Accepts rbxassetid numbers, "rbxassetid://ID" strings or direct image URLs.
+-- Marvel background. Put YOUR character art here (rbxassetid numbers, "rbxassetid://ID" strings or direct image URLs).
+-- Every entry becomes one tile of a full-window collage; with an empty list a comic-style Marvel backdrop is drawn.
 Config.Marvel = {
-    Backgrounds = { "rbxassetid://79815990500344" },
+    Backgrounds = {
+        138415840390063,
+    },
     Logo = nil,        -- optional: your own Marvel logo image (same formats)
     Columns = 1, Rows = 1,
-    ImageFade = 0.12,  -- 0 = fully visible picture, 1 = invisible
-    Parallax = 8,      -- px of subtle depth shift following the mouse (0 disables)
+    ImageFade = 0.08,  -- slight fade so UI stays sharp over the hero art
+    Parallax = 22,     -- deeper cinematic parallax following the mouse
 }
 if Config.Marvel.Logo then
     Assets.Overrides.marvel = Config.Marvel.Logo
@@ -12120,6 +12122,12 @@ function Window:BuildPattern()
                 end)
             end
         end
+        -- Cinematic dark glass overlay keeps menu text legible over the hero collage.
+        Draw.New("Frame", {
+            Name = "CinematicTint", Size = UDim2.fromScale(1, 1),
+            BackgroundColor3 = Color3.fromRGB(4, 6, 16), BackgroundTransparency = 0.42,
+            BorderSizePixel = 0, ZIndex = far.ZIndex + 1, Parent = far,
+        })
     else
         local base = Draw.New("Frame", { Name = "Comic", Size = UDim2.fromScale(1, 1), BorderSizePixel = 0, BackgroundColor3 = Color3.new(1, 1, 1), Parent = far })
         Draw.New("UIGradient", { Rotation = 35, Parent = base, Color = ColorSequence.new({
@@ -12144,6 +12152,18 @@ function Window:BuildPattern()
             if d:IsA("TextLabel") then d.TextTransparency = 0.82 elseif d:IsA("Frame") then d.BackgroundTransparency = 0.82 end
         end
         mark.BackgroundTransparency = 0.82
+    end
+
+    -- mid plane: scattered Marvel icons (shield, arc reactor, hammer, stones, gauntlet)
+    local icons = Draw.New("CanvasGroup", { Name = "Icons", BackgroundTransparency = 1, GroupTransparency = pattern.Fade, Size = UDim2.fromScale(1, 1), Parent = mid })
+    for row = 0, pattern.Rows - 1 do
+        for column = 0, pattern.Columns - 1 do
+            if (column + row * 2) % pattern.Every == 0 then
+                local art = pattern.Art[(column * 7 + row * 3) % #pattern.Art + 1]
+                local tile = Sprite.New(icons, art, pattern.Tile)
+                tile.Position = UDim2.new((column + pattern.Offset) / pattern.Columns, -pattern.Tile / 2, (row + pattern.Offset) / pattern.Rows, -pattern.Tile / 2)
+            end
+        end
     end
 
     -- near plane: readability vignette + red rim light so the foreground UI pops forward
@@ -12495,7 +12515,7 @@ function Window:BuildTopButtons()
     end)
     Window.SetArt(self.MinimizeButton, "marvelstand")
     Window.SetArt(self.MinimizeButton, "marvel")
-    self.CloseButton = self:BlockButton("Close", "pipe", 5, function()
+    self.CloseButton = self:BlockButton("Close", "close", 5, function()
         self:Hide()
     end)
 end
@@ -12540,7 +12560,7 @@ function Window:BlockButton(name, art, order, callback)
     return entry
 end
 
----Sprites are kept per art, so swapping back and forth (minimize ?-block / used block) never rebuilds pixels.
+---Sprites are kept per art, so swapping minimize/open icons never rebuilds pixels.
 function Window.SetArt(entry, art)
     if entry.Art == art then
         return
@@ -13440,7 +13460,7 @@ function Window:Toggle()
     self:SetVisible(not self.Visible)
 end
 
----Shrinks to the header with a bounce; the ?-block turns into a used block while folded.
+---Shrinks to the header with a bounce; minimize icon updates while folded.
 function Window:SetMinimized(minimized)
     if self.Minimized == minimized or (minimized and self.Mode == "Phone") then
         return
@@ -14437,11 +14457,9 @@ end
 Config.Intro = {
     Width = 440, Height = 236, Margin = 16, MaxScale = 1.35, Scrim = 0.12,
     MinShow = 1.5, MaxShow = 2.2, Exit = 0.32, Flourish = 0.12, Hold = 0, StepTimeout = 15,
-    Block = 64, BlockY = 62, Bump = 0.24, Open = 0.5,
-    Coin = 30, CoinRise = 58, CoinSpin = 520,
     Letter = 62, LogoY = 20, LetterRise = 18, Drop = 5, Stagger = 0.04,
     SubY = 104, SubSize = 18,
-    BarY = 186, BarHeight = 12, BarInset = 26, Runner = 28, Flag = 52,
+    BarY = 186, BarHeight = 12, BarInset = 26,
     StatusSize = 15,
 }
 
@@ -14451,7 +14469,6 @@ Lang.Strings.IntroSkipTouch = { EN = "Tap to skip", TH = "แตะเพื่�
 Intro.PopIn = { Damping = 0.45 }
 Intro.LetterPop = { Damping = 0.42 }
 Intro.Settle = { Damping = 0.55 }
-Intro.CoinSpinOptions = { Damping = 0.12 }
 
 ---Marvel level loader. Yields at most Config.Intro.MaxShow (+ Hold); steps still running then finish in the background.
 ---@param settings table  { Title, SubTitle, Steps = { { Label, Run } }, OnDone, Enabled = true }
@@ -14555,8 +14572,6 @@ function Intro.Build(settings)
     local fit = Intro.Fit(layer)
     local parts = { Screen = screen, Stage = stage, Fit = fit, Layer = layer }
     parts.Scale = Draw.New("UIScale", { Scale = fit * 0.9, Parent = stage })
-    parts.Block = Intro.Block(stage)
-    parts.Coin = Intro.Coin(stage)
     parts.Letters = Intro.Logo(stage, settings.Title or "Marvel Hub")
     parts.Sub = Intro.Subtitle(stage, settings.SubTitle)
     parts.Track = Intro.Track(stage)
@@ -14584,28 +14599,6 @@ function Intro.BindSkip(screen)
     end)
 end
 
----@return table  { Holder, Scale, Sprite }  ?-block that pops in, gets hit, then opens into the logo
-function Intro.Block(stage)
-    local intro = Config.Intro
-    local holder = Draw.New("Frame", { Name = "Block", BackgroundTransparency = 1, AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromOffset(intro.Width / 2, intro.BlockY), Size = UDim2.fromOffset(intro.Block, intro.Block), ZIndex = Config.Z.Raised, Parent = stage })
-    local scale = Draw.New("UIScale", { Scale = 0, Parent = holder })
-    local sprite = Sprite.New(holder, "marvelstand", intro.Block)
-    sprite.ZIndex = Config.Z.Raised
-    return { Holder = holder, Scale = scale, Sprite = sprite }
-end
-
-function Intro.Coin(stage)
-    local intro = Config.Intro
-    local coin = Sprite.New(stage, "coin", intro.Coin)
-    coin.AnchorPoint = Vector2.new(0.5, 0.5)
-    coin.Position = UDim2.fromOffset(intro.Width / 2, intro.BlockY)
-    coin.Size = UDim2.fromOffset(intro.Coin, 0)
-    coin.ZIndex = Config.Z.Body
-    coin.Visible = false
-    return coin
-end
-
----@return table[]  { Label, Scale } per glyph; Thai or non-Latin titles become one label
 function Intro.Logo(stage, title)
     local intro = Config.Intro
     local text = Lang.Resolve(title):upper()
@@ -14655,30 +14648,37 @@ function Intro.Subtitle(stage, subTitle)
     return { Label = label, Stroke = stroke, Empty = text == "" }
 end
 
----Level timeline: bar from start to the flag, a reactor runs along it as steps finish.
+---Standard loading progress bar.
 function Intro.Track(stage)
     local intro = Config.Intro
-    local inset, length = intro.BarInset, intro.Width - intro.BarInset * 2 - intro.Flag
-    local bar = Draw.Box("Frame", { Name = "Bar", Position = UDim2.fromOffset(inset, intro.BarY), Size = UDim2.fromOffset(length, intro.BarHeight), ZIndex = Config.Z.Body, Parent = stage }, "Track", "Ink", UDim.new(0, 4), 2)
-    local fill = Draw.Box("Frame", { Size = UDim2.fromScale(0, 1), ZIndex = Config.Z.Detail, Parent = bar }, "Coin", nil, UDim.new(0, 4))
-    local flag = Sprite.New(stage, "flag", intro.Flag)
-    flag.AnchorPoint, flag.Position, flag.ZIndex = Vector2.new(0.5, 1), UDim2.fromOffset(inset + length + intro.Flag * 0.55, intro.BarY + intro.BarHeight + 2), Config.Z.Raised
-    local runner = Draw.New("Frame", { BackgroundTransparency = 1, AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.fromOffset(inset, intro.BarY - 1), Size = UDim2.fromOffset(intro.Runner, intro.Runner), ZIndex = Config.Z.Top, Parent = stage })
-    local body = Sprite.New(runner, "reactor", intro.Runner)
-    body.ZIndex = Config.Z.Top
+    local inset, length = intro.BarInset, intro.Width - intro.BarInset * 2
+    local bar = Draw.Box("Frame", {
+        Name = "Bar", Position = UDim2.fromOffset(inset, intro.BarY),
+        Size = UDim2.fromOffset(length, intro.BarHeight),
+        ZIndex = Config.Z.Body, Parent = stage,
+    }, "Track", "Ink", UDim.new(0, 4), 2)
+    local fill = Draw.Box("Frame", {
+        Size = UDim2.fromScale(0, 1), ZIndex = Config.Z.Detail, Parent = bar,
+    }, "Accent", nil, UDim.new(0, 4))
     local textY = intro.BarY + intro.BarHeight + 8
-    local status = Draw.Text({ Position = UDim2.fromOffset(inset, textY), Size = UDim2.fromOffset(length - 60, intro.StatusSize + 6), TextTruncate = Enum.TextTruncate.AtEnd, ZIndex = Config.Z.Top, Parent = stage }, "Body", intro.StatusSize, "White")
-    local percent = Draw.Text({ AnchorPoint = Vector2.new(1, 0), Position = UDim2.fromOffset(inset + length, textY), Size = UDim2.fromOffset(60, intro.StatusSize + 6), TextXAlignment = Enum.TextXAlignment.Right, Text = "0%", ZIndex = Config.Z.Top, Parent = stage }, "Logo", intro.StatusSize + 2, "Coin")
-    Draw.Stroke(percent, "Ink", 2)
+    local status = Draw.Text({
+        Position = UDim2.fromOffset(inset, textY),
+        Size = UDim2.fromOffset(length - 60, intro.StatusSize + 6),
+        TextTruncate = Enum.TextTruncate.AtEnd, ZIndex = Config.Z.Top, Parent = stage,
+    }, "Body", intro.StatusSize, "White")
+    local percent = Draw.Text({
+        AnchorPoint = Vector2.new(1, 0),
+        Position = UDim2.fromOffset(inset + length, textY),
+        Size = UDim2.fromOffset(60, intro.StatusSize + 6),
+        TextXAlignment = Enum.TextXAlignment.Right, Text = "0%",
+        ZIndex = Config.Z.Top, Parent = stage,
+    }, "Logo", intro.StatusSize + 2, "Accent")
     local value = Draw.New("NumberValue", { Value = 0 })
-    local track = { Status = status, Percent = percent, Flag = flag, Runner = runner, Body = body, Fill = fill, Value = value, Alive = true }
+    local track = { Status = status, Percent = percent, Fill = fill, Value = value, Alive = true }
     value.Changed:Connect(function(progress)
-        if not track.Alive then
-            return
-        end
+        if not track.Alive then return end
         fill.Size = UDim2.fromScale(progress, 1)
         percent.Text = math.floor(progress * 100 + 0.5) .. "%"
-        runner.Position = UDim2.fromOffset(inset + (length - intro.Runner) * progress, intro.BarY - 1)
     end)
     return track
 end
@@ -14688,47 +14688,19 @@ function Intro.Show(settings, parts)
     Motion.Spring(parts.Screen, "BackgroundTransparency", intro.Scrim, "Normal")
     Motion.Spring(parts.Stage, "GroupTransparency", 0, "Normal")
     Motion.Spring(parts.Scale, "Scale", parts.Fit, "Normal", Intro.Settle)
-    Motion.Spring(parts.Block.Scale, "Scale", 1, "Normal", Intro.PopIn)
     Motion.Spring(parts.Skip, "TextTransparency", 0.35, "Soft")
     task.spawn(Intro.RunSteps, settings, parts.Track)
-    task.wait(intro.Bump)
-    Intro.HitBlock(parts)
-    task.wait(intro.Open - intro.Bump)
     Intro.OpenLogo(parts)
     Intro.Wait(settings, intro.Exit + intro.Flourish)
-    if settings.Ran and not Intro.Skipped then
-        Intro.ReachFlag(parts)
-    end
     Intro.Exit(settings, parts)
-end
-
-function Intro.HitBlock(parts)
-    local intro = Config.Intro
-    local block = parts.Block
-    block.Sprite:Destroy()
-    block.Sprite = Sprite.New(block.Holder, "marvel", intro.Block)
-    block.Sprite.ZIndex = Config.Z.Raised
-    Motion.Impulse(block.Holder, "Position", { 0, 0, 0, -320 }, "Fast", 0.4)
-    local coin = parts.Coin
-    coin.Visible = true
-    Motion.Spring(coin, "Position", UDim2.fromOffset(intro.Width / 2, intro.BlockY - intro.CoinRise), "Normal", Intro.Settle)
-    Motion.Set(coin, "Size", UDim2.fromOffset(intro.Coin, intro.Coin))
-    Motion.Impulse(coin, "Size", { 0, intro.CoinSpin, 0, 0 }, "Fast", Intro.CoinSpinOptions.Damping)
 end
 
 function Intro.OpenLogo(parts)
     local intro = Config.Intro
-    local center = UDim2.fromOffset(intro.Width / 2, intro.BlockY)
-    Motion.Spring(parts.Block.Scale, "Scale", 0, "Fast")
-    Motion.Spring(parts.Coin, "Size", UDim2.fromOffset(0, intro.Coin), "Fast")
-    Motion.Spring(parts.Coin, "Position", center - UDim2.fromOffset(0, intro.CoinRise + 12), "Fast")
-    Fx.Burst(parts.Stage, center, 10)
     Fx.Stagger(parts.Letters, intro.Stagger, Intro.RevealLetter)
     local sub = parts.Sub
     task.delay(#parts.Letters * intro.Stagger * 0.6, function()
-        if not sub.Label.Parent or sub.Empty then
-            return
-        end
+        if not sub.Label.Parent or sub.Empty then return end
         Motion.Spring(sub.Label, "TextTransparency", 0, "Soft")
         Motion.Spring(sub.Stroke, "Transparency", 0.2, "Soft")
         Motion.Spring(sub.Label, "Position", UDim2.fromOffset(intro.Width / 2, intro.SubY), "Soft", Intro.Settle)
@@ -14746,17 +14718,8 @@ function Intro.RevealLetter(letter)
     Motion.Spring(letter.Holder, "Position", UDim2.fromScale(0.5, 0.5), "Normal", Intro.LetterPop)
 end
 
-function Intro.ReachFlag(parts)
-    local track = parts.Track
-    Motion.Impulse(track.Flag, "Position", { 0, 0, 0, -260 }, "Fast", 0.35)
-    Fx.Burst(parts.Stage, track.Flag.Position - UDim2.fromOffset(0, Config.Intro.Flag * 0.6), 8)
-    for index, letter in ipairs(parts.Letters) do
-        task.delay(index * 0.02, Motion.Impulse, letter.Holder, "Position", { 0, 0, 0, -160 }, "Fast", 0.4)
-    end
-    task.wait(Config.Intro.Flourish)
-end
 
----Iris opens from the stage centre while the stage zooms past the camera; the window shows underneath.
+
 function Intro.Exit(settings, parts)
     local intro = Config.Intro
     local view = parts.Layer.AbsoluteSize
@@ -14924,33 +14887,34 @@ end
 ---@author xDTaraZ  Marvel Hub UI V2
 Config.Decor = {
     Tick = 0.5, MinWidth = 420, MinHeight = 80, DriftEvery = 8, Drift = 18, DriftSpeed = 1.1,
-    TwinkleSpeed = 3, TwinkleAlpha = 0.85, StarAlpha = 0.2, Twinkles = 2,
-    Parallax = { Pad = 48, Far = 0.45, Speed = "Soft", Spring = { Damping = 0.85 } },
+    TwinkleSpeed = 2.4, TwinkleAlpha = 0.75, StarAlpha = 0.18, Twinkles = 3,
+    Parallax = { Pad = 56, Far = 0.5, Speed = "Soft", Spring = { Damping = 0.82 } },
     Scenes = {
         Avengers = { Stars = true, Shooting = true },
-        ["Iron Man"] = { Stars = true },
+        ["Iron Man"] = { Stars = true, Shooting = true },
         ["Captain America"] = { Stars = true, Shooting = true },
         ["Black Panther"] = { Stars = true },
         Hulk = { Stars = true },
         Infinity = { Stars = true, Shooting = true },
     },
-    Clouds = { { 0.46, 50, 44, "Near" }, { 0.62, 58, 30, "Far" }, { 0.78, 48, 38, "Near" }, { 0.92, 60, 26, "Far" } },
-    Hills = { { 0.5, 96, 20, "Far" }, { 0.66, 120, 28, "Near" }, { 0.86, 90, 16, "Far" } },
-    HillEye = Vector2.new(3, 7), HillEyeGap = 6, HillAlpha = 0.3,
-    Stars = { { 0.44, 50, 12 }, { 0.5, 72, 9 }, { 0.57, 56, 14 }, { 0.64, 80, 10 }, { 0.7, 48, 11 }, { 0.77, 70, 8 }, { 0.84, 54, 12 }, { 0.92, 76, 9 } },
-    Torches = { 0.5, 0.86 }, TorchY = 0.68, Torch = Vector2.new(6, 14), Flame = Vector2.new(10, 14), Flicker = 60,
-    Ceiling = 10, CeilingAlpha = 0.35, CeilingColumns = 24,
-    Shooting = { Every = 28, Size = 14, Speed = 2.2, Travel = 0.3 },
-    Lava = { Height = 90, Alpha = 0.55, Pulse = 0.2, Every = 6, Speed = 1.5 },
-    Walker = { Size = 14, Every = 12, Speed = 0.8, Hop = 120, HopDamping = 0.45, Margin = 0.06, Art = "villain", MinWidth = 360 },
-    Burst = { Count = 5, Reach = 22, Glyph = "✦", Size = { 9, 13 }, Fade = "Soft" },
-    Bump = { Velocity = 260, Damping = 0.4 },
-    Lift = 3,
+    -- Pure Marvel cinematic sky: stars + energy streaks only (no hills / lava / walker)
+    Clouds = {},
+    Hills = {},
+    HillEye = Vector2.new(3, 7), HillEyeGap = 6, HillAlpha = 0,
+    Stars = { { 0.44, 50, 12 }, { 0.5, 72, 9 }, { 0.57, 56, 14 }, { 0.64, 80, 10 }, { 0.7, 48, 11 }, { 0.77, 70, 8 }, { 0.84, 54, 12 }, { 0.92, 76, 9 }, { 0.38, 40, 10 }, { 0.88, 38, 11 } },
+    Torches = {}, TorchY = 0.68, Torch = Vector2.new(6, 14), Flame = Vector2.new(10, 14), Flicker = 0,
+    Ceiling = 0, CeilingAlpha = 0, CeilingColumns = 0,
+    Shooting = { Every = 18, Size = 16, Speed = 2.6, Travel = 0.38 },
+    Lava = { Height = 0, Alpha = 0, Pulse = 0, Every = 999, Speed = 1 },
+    Walker = { Size = 0, Every = 999, Speed = 0.8, Hop = 0, HopDamping = 0.45, Margin = 0.06, Art = "reactor", MinWidth = 9999 },
+    Burst = { Count = 7, Reach = 28, Glyph = "✦", Size = { 10, 15 }, Fade = "Soft" },
+    Bump = { Velocity = 280, Damping = 0.38 },
+    Lift = 4,
 }
-Config.Particles.Spawn = 0.8
-Config.Particles.Size = { 9, 16 }
-Config.Particles.Settle = 6.6
-Config.Particles.PhoneCount = 6
+Config.Particles.Spawn = 0.55
+Config.Particles.Size = { 10, 18 }
+Config.Particles.Settle = 8.5
+Config.Particles.PhoneCount = 8
 Config.Particles.Themes = {
     Hulk = { Glyph = "•", Fall = true },
     ["Black Panther"] = { Glyph = "•", Fall = false },
@@ -14986,6 +14950,9 @@ end
 ---Parallax sky inside host (the header banner): far and near planes, per-theme pieces.
 ---Pieces sit below the header control row, so nothing ever covers a button.
 ---@return table  handle for Decor.Shift
+-- Marvel cinematic header sky layer (stars + energy streaks).
+
+
 function Decor.Attach(host)
     local pad = Config.Decor.Parallax.Pad
     local handle = { Host = host, Clouds = {}, Stars = {}, Hills = {}, Torches = {} }
@@ -14997,7 +14964,6 @@ function Decor.Attach(host)
     Decor.BuildTorches(handle)
     Decor.BuildCeiling(handle)
     Decor.BuildShooting(handle)
-
     Decor.Handles[#Decor.Handles + 1] = handle
     Util.Connect(host:GetPropertyChangedSignal("AbsoluteSize"), function()
         Decor.Render(handle)
@@ -15122,7 +15088,7 @@ function Decor.Shift(handle, ratio)
     Motion.Spring(handle.Far, "Position", UDim2.fromOffset(near * parallax.Far, 0), parallax.Speed, parallax.Spring)
 end
 
----Castle lava glow along the bottom of host (the ambient layer behind the pages).
+---Subtle energy glow along the bottom of host (ambient layer behind pages).
 function Decor.AttachBackdrop(host)
     local lava = Config.Decor.Lava
     local glow = Draw.Box("Frame", { Name = "Lava", AnchorPoint = Vector2.new(0, 1), Position = UDim2.fromScale(0, 1), Size = UDim2.new(1, 0, 0, lava.Height), BackgroundTransparency = 0, Parent = host }, "Accent")
@@ -15140,7 +15106,7 @@ function Decor.AttachBackdrop(host)
     return handle
 end
 
----Little reactor wandering across host (the ground strip).
+---Optional ground accent (disabled for clean Marvel look).
 function Decor.AttachGround(host)
     local walker = Config.Decor.Walker
     local frame = Draw.New("Frame", { Name = "Walker", BackgroundTransparency = 1, AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.3, 0, 1, -2), Size = UDim2.fromOffset(walker.Size, walker.Size), ZIndex = Config.Chrome.Z.Walker, Parent = host })
@@ -21301,7 +21267,7 @@ end
 Library.Themes = Themes.Order
 Library.Util = Util
 
--- ===== MARVEL HUB · MENU + AUTO THROW TAB =====
+-- ===== MARVEL HUB · MENU (MARVEL) + AUTO THROW TAB =====
 -- One tab ("Main") with the "Auto Throw" toggle. Turning it on runs the full
 -- PerfectThrow logic (hook ThrowMeter, walk to target, auto-throw loop, auto
 -- continue, animation skip, auto prompt); turning it off undoes everything.
@@ -21768,7 +21734,7 @@ antiAfkGroup:AddParagraph({
     Description = "Enable this to respond to Roblox's Idled event and help prevent an idle disconnect. The exact timeout can vary by experience and platform.",
     Icon = "antiafk",
 })
-antiAfkGroup:AddToggle("MarvelAntiAfk20Min", {
+antiAfkGroup:AddToggle("ZoneAntiAfk20Min", {
     Text = "Anti-AFK (20 min idle)",
     Description = "Keeps the session active when Roblox signals that the player has been idle.",
     Icon = "antiafk",
